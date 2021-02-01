@@ -1,0 +1,80 @@
+.menu-div {
+  background: #080B1F;
+}
+ul {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-left: -40px;
+}
+ul li {
+  list-style: none;
+}
+ul li a {
+  position: relative;
+  font-size: 1.25em;
+  color: white;
+  text-decoration: none;
+  margin: 5px 0;
+  display: inline-block;
+}
+#marker {
+  position: absolute;
+  top: 0;
+  height: 28px;
+  margin-top: -2px;
+  background: #2196F3;
+  border-radius: 2px;
+  transition: 0.5s;
+}
+.content {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 100%;
+}
+
+
+.sidebar {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+
+  height: 100%;
+}
+
+.sidebar.is-visible  ~ .content {
+  flex-basis: 0;
+}
+
+/* Animation */
+.content {
+  transition: flex-basis .1s cubic-bezier(.465, .183, .153, .946);
+  will-change: flex-basis;
+}
+
+.sidebar.is-visible  ~ .content {
+  transition: flex-basis .3s cubic-bezier(.465, .183, .153, .946);
+}
+
+
+.sidebar-content {
+  display: block;
+  width: 100px;
+  height: 100%;
+  margin: 0;
+  padding: 20px;
+  border-right: 1px solid #ccc;
+  box-shadow: 0 0 3px #cccccc;
+}
+
+.content {
+  padding: 10px;
+}
+.menu-container-div {
+  display: flex;
+  justify-content: flex-end;
+}

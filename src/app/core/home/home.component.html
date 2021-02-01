@@ -1,0 +1,18 @@
+<div class="menu-container-div">
+  <aside class="sidebar is-visible">
+    <div class="menu-div sidebar-content">
+      <ul>
+        <div id="marker"></div>
+        <li><a href="#">Home</a></li>
+        <li><a [routerLink]="['/home/drawing']">Drawing</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Portfolio</a></li>
+        <li><a href="#">Team</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </aside>
+  <main  class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
