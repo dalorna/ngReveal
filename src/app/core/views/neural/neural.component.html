@@ -1,0 +1,24 @@
+<div>
+  <a (click)="trainNetwork()">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    Train Network
+  </a>
+</div>
+<div>
+  <a (click)="testNetwork()">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    Test Network
+  </a>
+</div>
+<div *ngIf="trainingDone">
+  <span>{{finalError}}</span>
+</div>
+<div>
+
+</div>

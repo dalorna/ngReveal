@@ -1,6 +1,7 @@
 .container-div {
   height: 400px;
   width: 400px;
+  position: relative;
   border: solid 1px black;
   box-shadow: 0 0 3px black;
 }

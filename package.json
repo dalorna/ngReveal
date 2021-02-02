@@ -23,12 +23,13 @@
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3",
-    "node-sass": "^5.0.0",
+    "dart-sass": "^1.25.0",
     "reveal.js": "^4.1.0",
     "reveal.js-menu": "^2.1.0",
     "es6-promise": "^4.2.8",
     "isomorphic-fetch": "^2.2.1",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "fabric": "^4.3.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1101.2",
