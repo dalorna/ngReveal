@@ -2,6 +2,7 @@ $base-color: #7FFF00;
 $highlight-color: #7FFF00;
 $highlight-color1: #0310EA;
 $base-color1: #2196F3;
+$error-color: #FF0000;
 
 a {
   position: relative;
@@ -16,6 +17,7 @@ a {
   transition: .2s;
   border: solid 1px $highlight-color;
 }
+
 a:hover{
   color: #255784;
   background: $base-color;
@@ -63,7 +65,7 @@ a:hover span:nth-child(2) {
 }
 a span:nth-child(4) {
   bottom: -100%;
-  left: 0%;
+  left: 0;
   width: 2px;
   height: 100%;
   background: linear-gradient(360deg, transparent, $base-color);
@@ -72,4 +74,37 @@ a:hover span:nth-child(4) {
   bottom: 100%;
   transition: 1s;
   transition-delay: .75s;
+}
+
+a.error {
+  border: solid 1px $error-color;
+}
+
+
+a.error:hover{
+  color: #255784;
+  background: $error-color;
+  box-shadow: 0 0 10px $error-color, 0 0 40px $error-color, 0 0 80px $error-color;
+  transition-delay: 1s;
+}
+
+a.error span:nth-child(1) {
+  background: linear-gradient(90deg, transparent, $error-color);
+}
+
+a.error span:nth-child(2) {
+  background: linear-gradient(180deg, transparent, $error-color);
+}
+
+a.error span:nth-child(3) {
+  background: linear-gradient(270deg, transparent, $error-color);
+}
+
+a.error span:nth-child(4) {
+  background: linear-gradient(360deg, transparent, $error-color);
+}
+
+.chosen-action {
+  color: #0800a1;
+  background-color: #ed9c05;
 }

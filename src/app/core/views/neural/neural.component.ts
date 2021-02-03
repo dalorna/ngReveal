@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-neural',
@@ -53,9 +54,21 @@ export class NeuralComponent implements OnInit {
   public finalError = 0;
   public actions = ['Attack', 'Run', 'Wander', 'Hide'];
   private errorsTotal = [];
-  constructor() { }
+  public neuralForm: FormGroup;
+  public highlightAttack = false;
+  public highlightRun = false;
+  public highlightWander = false;
+  public highlightHide = false;
+
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.neuralForm = this.fb.group({
+      health: new FormControl(null, [Validators.required, Validators.pattern('^[0-9]+$')]),
+      knife: new FormControl(null, [Validators.required, Validators.pattern('^[0-1]+$')]),
+      gun: new FormControl(null, [Validators.required, Validators.pattern('^[0-1]+$')]),
+      enemy: new FormControl(null, [Validators.required, Validators.pattern('^[0-3]+$')])
+    });
   }
 
   smallRandom(): number {
@@ -207,6 +220,29 @@ export class NeuralComponent implements OnInit {
         console.log('Samples', this.samples[i]);
         console.log('target', this.target);
         console.log('actual', this.actual);
+      }
+    }
+  }
+
+  useNetwork(): void {
+    if (this.neuralForm.valid) {
+      this.highlightAttack = false;
+      this.highlightRun = false;
+      this.highlightWander = false;
+      this.highlightHide = false;
+      this.inputs = [];
+      this.target = [];
+      this.inputs.push(parseInt(this.neuralForm.get('health').value, 10));
+      this.inputs.push(parseInt(this.neuralForm.get('knife').value, 10));
+      this.inputs.push(parseInt(this.neuralForm.get('gun').value, 10));
+      this.inputs.push(parseInt(this.neuralForm.get('enemy').value, 10));
+
+      this.feedForward();
+      switch (this.actions[this.actual.indexOf(Math.max(...this.actual))]) {
+        case 'Attack': this.highlightAttack = true; break;
+        case 'Run': this.highlightRun = true; break;
+        case 'Wander': this.highlightWander = true; break;
+        case 'Hide': this.highlightHide = true; break;
       }
     }
   }

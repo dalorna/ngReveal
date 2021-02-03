@@ -1,24 +1,95 @@
 <div>
-  <a (click)="trainNetwork()">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    Train Network
-  </a>
-</div>
-<div>
-  <a (click)="testNetwork()">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    Test Network
-  </a>
-</div>
-<div *ngIf="trainingDone">
-  <span>{{finalError}}</span>
-</div>
-<div>
 
+
+
+
+  <div>
+    <div>
+      <a (click)="trainNetwork()">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        Train Network
+      </a>
+    </div>
+    <div>
+      <a (click)="testNetwork()">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        Test Network
+      </a>
+    </div>
+    <div *ngIf="trainingDone">
+      <span>{{finalError}}</span>
+    </div>
+  </div>
+
+  <form [formGroup]="neuralForm" class="clr-form-horizontal" >
+    <div class="container">
+      <div class="row align-items-start">
+        <div class="col">
+          <label for="health" [ngClass]="{'required' : neuralForm.get('health').errors}">Health</label>
+        </div>
+        <div class="col">
+          <label for="gun" [ngClass]="{'required' : neuralForm.get('gun').errors}">Gun</label>
+        </div>
+        <div class="col">
+          <label for="knife" [ngClass]="{'required' : neuralForm.get('knife').errors}">Knife</label>
+        </div>
+        <div class="col">
+          <label for="enemy" [ngClass]="{'required' : neuralForm.get('enemy').errors}">Enemy</label>
+        </div>
+      </div>
+      <div class="row align-items-start">
+        <div class="col">
+          <input type="text" formControlName="health" id="health">
+        </div>
+        <div class="col">
+          <input type="text" formControlName="gun" id="gun">
+        </div>
+        <div class="col">
+          <input type="text" formControlName="knife" id="knife">
+        </div>
+        <div class="col">
+          <input type="text" formControlName="enemy" id="enemy">
+        </div>
+      </div>
+      <div class="row align-items-start">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col">
+            <a (click)="useNetwork()" [ngClass]="{'error' : !neuralForm.valid}">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              Use Network
+            </a>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+
+  <div class="container">
+    <div class="row align-items-start">
+      <div class="col">
+        <label [ngClass]="{'chosen-action' : highlightAttack}">Attack</label>
+      </div>
+      <div class="col">
+        <span [ngClass]="{'chosen-action' : highlightRun}">Run</span>
+      </div>
+      <div class="col">
+        <span [ngClass]="{'chosen-action' : highlightWander}">Wander</span>
+      </div>
+      <div class="col">
+        <span [ngClass]="{'chosen-action' : highlightHide}">Hide</span>
+      </div>
+    </div>
+  </div>
 </div>

@@ -31,7 +31,8 @@
               "src/styles.css",
               "node_modules/reveal.js/css/reveal.scss",
               "node_modules/reveal.js/dist/theme/white.css",
-              "node_modules/reveal.js-menu/menu.css"
+              "node_modules/reveal.js-menu/menu.css",
+              "node_modules/bootstrap/dist/css/bootstrap.css"
 
             ],
             "scripts": [
