@@ -4,6 +4,7 @@ import {DrawingCanvasComponent} from './views/drawing-canvas/drawing-canvas.comp
 import {HomeComponent} from './home/home.component';
 import {RevComponent} from './views/rev/rev.component';
 import {NeuralComponent} from './views/neural/neural.component';
+import {DynamicComponent} from './views/dynamic/dynamic.component';
 
 
 const routes: Routes = [
@@ -13,7 +14,8 @@ const routes: Routes = [
     children: [
       {path: 'drawing', component: DrawingCanvasComponent},
       {path: 'rev', component: RevComponent},
-      {path: 'neural', component: NeuralComponent}
+      {path: 'neural', component: NeuralComponent},
+      {path: 'dynamic', component: DynamicComponent}
     ]
   }
 ];
@@ -26,6 +28,7 @@ export class CoreRoutingModule {
   static components = [
     DrawingCanvasComponent,
     RevComponent,
-    NeuralComponent
+    NeuralComponent,
+    DynamicComponent
   ];
 }

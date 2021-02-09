@@ -1,11 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 /*@import 'node_modules/reveal.js/css/reveal.scss';*/
 /*@import './node_modules/reveal.js/dist/theme/white.css';*/
-body {
-  font-family: Metropolis,"Avenir Next","Helvetica Neue",Arial,sans-serif;
+/*body {*/
+/*   font-family: Metropolis,"Avenir Next","Helvetica Neue",Arial,sans-serif;*/
+/*}*/
+
+body div {
+  font-family: 'Titillium Web', serif;
 }
 .required {
-  color: red;
+  color: red !important;
+  border-color: red !important;
 }
 
 .required:after {

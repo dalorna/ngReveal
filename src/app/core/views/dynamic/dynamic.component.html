@@ -1,0 +1,38 @@
+<div class="form">
+
+  <div class="tab-content">
+    <div id="signup">
+      <form [formGroup]="dynamicForm" (ngSubmit)="trainNetwork()" #formDir="ngForm">
+        <div class="top-row">
+          <div class="field-wrap">
+            <input type="text" [ngClass]="{'required' : dynamicForm.get('inputs').errors}" formControlName="inputs" placeholder="Number of Inputs" autocomplete="off" />
+          </div>
+          <div class="field-wrap">
+            <input type="text" [ngClass]="{'required' : dynamicForm.get('hiddenLayers').errors}"  formControlName="hiddenLayers" placeholder="Number of Hidden Layers" autocomplete="off"/>
+          </div>
+
+          <div class="field-wrap">
+            <input type="text" [ngClass]="{'required' : dynamicForm.get('outputs').errors}"  formControlName="outputs" placeholder="Number Outputs" autocomplete="off"/>
+          </div>
+        </div>
+        <div class="top-row">
+          <div class="field-wrap">
+            <input type="text" [ngClass]="{'required' : dynamicForm.get('hiddenNodes').errors}"  formControlName="hiddenNodes" placeholder="Number of Hidden Layer nodes" autocomplete="off" />
+          </div>
+          <div class="field-wrap">
+            <input type="text" [ngClass]="{'required' : dynamicForm.get('iterations').errors}"  formControlName="iterations" placeholder="Iterations" autocomplete="off"/>
+          </div>
+          <div class="field-wrap">
+            <label class="cool">{{totalErr}}</label>
+          </div>
+        </div>
+        <div class="top-row">
+          <div class="field-wrap">
+            <button type="submit" class="btn btn-sm btn-outline-light">Train Network</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>

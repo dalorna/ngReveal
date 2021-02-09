@@ -196,6 +196,7 @@ export class NeuralComponent implements OnInit {
     this.trainingDone = true;
     this.finalError = err;
     console.log('min Error: ', Math.min(...this.errorsTotal));
+    console.log('actual (n): ', this.actual);
   }
 
   testNetwork(): void {
