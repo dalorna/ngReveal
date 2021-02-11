@@ -5,6 +5,7 @@ import {HomeComponent} from './home/home.component';
 import {RevComponent} from './views/rev/rev.component';
 import {NeuralComponent} from './views/neural/neural.component';
 import {DynamicComponent} from './views/dynamic/dynamic.component';
+import {HandWritingComponent} from './views/hand-writing/hand-writing.component';
 
 
 const routes: Routes = [
@@ -15,7 +16,8 @@ const routes: Routes = [
       {path: 'drawing', component: DrawingCanvasComponent},
       {path: 'rev', component: RevComponent},
       {path: 'neural', component: NeuralComponent},
-      {path: 'dynamic', component: DynamicComponent}
+      {path: 'dynamic', component: DynamicComponent},
+      {path: 'writing', component: HandWritingComponent}
     ]
   }
 ];
@@ -29,6 +31,7 @@ export class CoreRoutingModule {
     DrawingCanvasComponent,
     RevComponent,
     NeuralComponent,
-    DynamicComponent
+    DynamicComponent,
+    HandWritingComponent
   ];
 }

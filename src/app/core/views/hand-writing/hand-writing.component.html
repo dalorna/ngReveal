@@ -1,0 +1,17 @@
+<div>
+  <div>
+    <label for="data">data:</label>
+    <input id="data" type="file" (change)="onFileChange($event)" style="margin-left: 21px;">
+  </div>
+  <div>
+    <label for="images">labels:</label>
+    <input id="images" type="file" (change)="onFileChangeImage($event)" style="margin-left: 10px;">
+  </div>
+  <div>
+    <button type="button" class="btn btn-sm btn-outline-dark" (click)="createImageFiles()">Create Images</button>
+  </div>
+  <div style="background-color: #255784; height: 200px; width: 200px; ">
+<!--    <img alt="" [src]="imageSrc" style="height: 200px; width: 200px;">-->
+    <canvas id="canvas" style="zoom: 5;"></canvas>
+  </div>
+</div>
