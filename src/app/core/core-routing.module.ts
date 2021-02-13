@@ -6,6 +6,7 @@ import {RevComponent} from './views/rev/rev.component';
 import {NeuralComponent} from './views/neural/neural.component';
 import {DynamicComponent} from './views/dynamic/dynamic.component';
 import {HandWritingComponent} from './views/hand-writing/hand-writing.component';
+import {ArtificialLifeComponent} from './views/artificial-life/artificial-life.component';
 
 
 const routes: Routes = [
@@ -17,7 +18,8 @@ const routes: Routes = [
       {path: 'rev', component: RevComponent},
       {path: 'neural', component: NeuralComponent},
       {path: 'dynamic', component: DynamicComponent},
-      {path: 'writing', component: HandWritingComponent}
+      {path: 'writing', component: HandWritingComponent},
+      {path: 'life', component: ArtificialLifeComponent}
     ]
   }
 ];
@@ -32,6 +34,7 @@ export class CoreRoutingModule {
     RevComponent,
     NeuralComponent,
     DynamicComponent,
-    HandWritingComponent
+    HandWritingComponent,
+    ArtificialLifeComponent
   ];
 }

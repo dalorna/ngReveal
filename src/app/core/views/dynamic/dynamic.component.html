@@ -1,38 +1,117 @@
-<div class="form">
-
-  <div class="tab-content">
-    <div id="signup">
-      <form [formGroup]="dynamicForm" (ngSubmit)="trainNetwork()" #formDir="ngForm">
-        <div class="top-row">
-          <div class="field-wrap">
-            <input type="text" [ngClass]="{'required' : dynamicForm.get('inputs').errors}" formControlName="inputs" placeholder="Number of Inputs" autocomplete="off" />
-          </div>
-          <div class="field-wrap">
-            <input type="text" [ngClass]="{'required' : dynamicForm.get('hiddenLayers').errors}"  formControlName="hiddenLayers" placeholder="Number of Hidden Layers" autocomplete="off"/>
-          </div>
-
-          <div class="field-wrap">
-            <input type="text" [ngClass]="{'required' : dynamicForm.get('outputs').errors}"  formControlName="outputs" placeholder="Number Outputs" autocomplete="off"/>
+<div>
+  <div>
+    <form class="form" [formGroup]="dynamicForm">
+      <div class="row-wrap">
+        <div class="settings">
+          <label class="simple"># Inputs: </label>
+          <input type="text" class="primary" [ngClass]="{'required' : dynamicForm.get('numInputs').errors}"
+                 formControlName="numInputs" placeholder="Number of Inputs" autocomplete="off"/>
+          <label class="simple"># Outputs: </label>
+          <input type="text" class="primary" [ngClass]="{'required' : dynamicForm.get('numOutputs').errors}"
+                 formControlName="numOutputs" placeholder="Number of Outputs" autocomplete="off"/>
+        </div>
+      </div>
+      <div class="row-wrap">
+        <div class="settings">
+          <label class="simple">Hidden Layers: </label>
+          <input type="text" class="primary" [ngClass]="{'required' : dynamicForm.get('hiddenLayers').errors}"
+                 formControlName="hiddenLayers" placeholder="# of Hidden Layers" autocomplete="off"/>
+          <label class="simple">Number of Nodes: </label>
+          <input type="text" class="primary" [ngClass]="{'required' : dynamicForm.get('hiddenNodes').errors}"
+                 formControlName="hiddenNodes" placeholder="Hidden Layer Nodes" autocomplete="off"/>
+        </div>
+      </div>
+      <div class="row-wrap">
+        <div class="settings">
+          <label class="simple">Iterations: </label>
+          <input type="text" class="primary" [ngClass]="{'required' : dynamicForm.get('iterations').errors}"
+                 formControlName="iterations" autocomplete="off"/>
+          <label class="simple">Total Error: </label>
+          <label class="cool">{{totalErr}}</label>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="input-border">
+    <h6>Input / Outputs</h6>
+    <div>
+      <button type="button" class="btn btn-sm btn-dark" (click)="onAddTrainingInput($event)">Add Input</button>
+      <button type="button" class="btn btn-sm btn-outline-dark" style="margin-left: 10px;"
+              (click)="onRemoveTrainingInput($event)">Remove Input
+      </button>
+      <button type="button" class="btn btn-sm btn-dark" style="margin-left: 10px;"
+              (click)="onAddTrainingOutput($event)">Add Output
+      </button>
+      <button type="button" class="btn btn-sm btn-outline-dark" style="margin-left: 10px;"
+              (click)="onRemoveTrainingOutput($event)">Remove Output
+      </button>
+    </div>
+    <div style="margin-top: 20px;">
+      <div *ngFor="let training of iTraining.controls" style="display: inline-block">
+        <div [formGroup]="training" class="form-input">
+          <div class="row input-height">
+            <label class="col-3 input-height" style="color: white"
+                   [ngClass]="{'invalid' : training.get('name').errors}">Name</label>
+            <input class="col-2 input-height secondary" type="text"
+                   [ngClass]="{'required-border' : training.get('name').errors}" formControlName="name"/>
+            <label class="col-3 input-height" style="color: white"
+                   [ngClass]="{'invalid' : training.get('value').errors}">Input</label>
+            <input class="col-2 input-height secondary" type="text"
+                   [ngClass]="{'required-border' : training.get('value').errors}" formControlName="value"/>
           </div>
         </div>
-        <div class="top-row">
-          <div class="field-wrap">
-            <input type="text" [ngClass]="{'required' : dynamicForm.get('hiddenNodes').errors}"  formControlName="hiddenNodes" placeholder="Number of Hidden Layer nodes" autocomplete="off" />
-          </div>
-          <div class="field-wrap">
-            <input type="text" [ngClass]="{'required' : dynamicForm.get('iterations').errors}"  formControlName="iterations" placeholder="Iterations" autocomplete="off"/>
-          </div>
-          <div class="field-wrap">
-            <label class="cool">{{totalErr}}</label>
+      </div>
+    </div>
+    <div style="margin-top: 20px;">
+      <div *ngFor="let training of oTraining.controls" style="display: inline-block">
+        <div [formGroup]="training" class="form-output">
+          <div class="row input-height">
+            <label class="col-3 input-height" style="color: white"
+                   [ngClass]="{'invalid' : training.get('name').errors}">Name</label>
+            <input class="col-2 input-height secondary" type="text"
+                   [ngClass]="{'required-border' : training.get('name').errors}" formControlName="name"/>
+            <label class="col-3 input-height" style="color: white;"
+                   [ngClass]="{'invalid' : training.get('value').errors}">Output</label>
+            <input class="col-2 input-height secondary" [ngClass]="{'required-border' : training.get('value').errors}"
+                   style="margin-left: 10px;" type="text" formControlName="value"/>
           </div>
         </div>
-        <div class="top-row">
-          <div class="field-wrap">
-            <button type="submit" class="btn btn-sm btn-outline-light">Train Network</button>
-          </div>
-        </div>
-      </form>
+      </div>
+    </div>
+    <div style="padding-bottom: 10px;">
+      <button type="button" class="btn btn-sm btn-primary" [disabled]="disableSamplesButton()" (click)="addSamples()">
+        Add Sample
+      </button>
+      <label style="margin-left: 10px">{{'# of Samples: ' + numSamples}}</label>
+      <button type="button" class="btn btn-sm btn-outline-primary" style="float: right;" (click)="onClear()">Clear Samples
+      </button>
     </div>
   </div>
-
+  <div>
+    <div class="json-border">
+      <textarea id="jsonSample"></textarea>
+      <div style="padding-bottom: 10px;">
+        <input type="file" id="jsonFileUpload" accept="application/json" (change)="onFileChange($event)">
+      </div>
+    </div>
+  </div>
+  <div class="button-border">
+    <button type="button" (click)="onReset()" class="btn btn-sm btn-outline-dark"
+            style="margin: 10px 0 10px 10px;">Reset
+    </button>
+    <button type="button" (click)="testNetwork()" [disabled]="!networkTrained" class="btn btn-sm btn-outline-dark"
+            style="margin: 10px 0 10px 10px;">Test Network
+    </button>
+    <button type="button" [disabled]="disableButton()" (click)="trainNetwork()" class="btn btn-sm btn-outline-dark"
+            style="margin: 10px 0 10px 132px;">Train Network
+    </button>
+  </div>
+  <div *ngIf="finalOutput && finalOutput.length > 0" class="list-output-border">
+    <ul class="out">
+      <li *ngFor="let out of finalOutput">
+        <span class="badge">{{out.outcome}}</span>
+        {{out.message}}
+      </li>
+    </ul>
+  </div>
 </div>

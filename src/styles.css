@@ -17,3 +17,10 @@ body div {
   content: " *";
   color: red;
 }
+.required-border {
+  border: solid 1px red !important;
+}
+.invalid {
+  color: red !important;
+  border-color: red !important;
+}

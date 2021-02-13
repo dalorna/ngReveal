@@ -31,33 +31,59 @@ a {
 .form {
   background: rgba($form-bg, .9);
   padding: 10px;
-  max-width: 600px;
+  border-radius: $br;
+  box-shadow: 0 4px 10px 4px rgba($form-bg, .3);
+  display: inline-block;
+}
+.form-input {
+  background: rgba($form-bg, .9);
+  padding: 10px;
+  margin: 2px;
+  border-radius: $br;
+  box-shadow: 0 4px 10px 4px rgba($form-bg, .3);
+  max-width: 320px;
+}
+.input-border {
+  margin-top: 10px;
+  padding: 1px 10px 1px 10px;
+  border: solid 1px black;
+  border-radius: 5px;
+  box-shadow: 0 0 3px grey;
+  display: inline-block;
+}
+.json-border {
+  margin-top: 10px;
+  padding: 1px 10px 1px 10px;
+  border: solid 1px black;
+  border-radius: 5px;
+  box-shadow: 0 0 3px grey;
+  display: inline-block;
+}
+.button-border {
+  margin-top: 10px;
+  padding: 1px 1px 1px 10px;
+  border: solid 1px black;
+  border-radius: 5px;
+  box-shadow: 0 0 3px grey;
+  width: 417px;
+}
+.form-output {
+  background: cadetblue;
+  padding: 10px;
+  max-width: 320px;
+  margin: 2px;
   border-radius: $br;
   box-shadow: 0 4px 10px 4px rgba($form-bg, .3);
   display: flex;
   flex-direction: column;
 }
-
-.tab-group {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 40px 0;
-
-  &:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-}
-
-input {
+input.primary {
   font-size: 12px;
   display: block;
   width: 100%;
-  height: 100%;
   padding: 5px 10px;
+  border: 1px solid $white;
   background: none;
-  border: 1px solid $gray-light;
   color: $white;
   border-radius: 5px;
   transition: border-color .25s ease, box-shadow .25s ease;
@@ -65,6 +91,11 @@ input {
   &:focus {
     outline: 0;
     border-color: $main;
+  }
+  &:disabled {
+    outline: 0;
+    cursor: not-allowed;
+    border: 1px solid $gray-light;
   }
 }
 
@@ -72,7 +103,6 @@ label.cool {
   font-size: 12px;
   display: block;
   width: 100%;
-  height: 100%;
   padding: 5px 10px;
   background: none;
   border: 1px solid $gray-light;
@@ -85,26 +115,99 @@ label.cool {
     border-color: $main;
   }
 }
-
 .field-wrap {
   position: relative;
   margin-bottom: 10px;
 }
+.row-wrap {
+  display: inline-block;
+}
 
-.top-row {
-  &:after {
-    content: "";
-    display: table;
-    clear: both;
+.input-height {
+  line-height: 20px;
+  height: 20px;
+}
+
+input.secondary {
+  font-size: 12px;
+  display: block;
+  padding: 5px 10px;
+  background: none;
+  border: 1px solid $gray-light;
+  color: $white;
+  border-radius: 5px;
+  transition: border-color .25s ease, box-shadow .25s ease;
+
+  &:focus {
+    outline: 0;
+    border-color: $main;
   }
-
-  > div {
-    float: left;
-    width: 31%;
-    margin-right: 3%;
-
-    &:last-child {
-      margin: 0;
-    }
-  }
+}
+label.simple {
+  height: 20px;
+  line-height: 30px;
+  color: white;
+  font-size: 15px;
+}
+div.settings {
+  display:grid;
+  grid-template-columns: max-content max-content;
+  grid-gap:5px;
+  margin: 5px;
+  padding: 1px;
+}
+div.settings label       { text-align:right; }
+textarea {
+  height: 200px;
+  max-height: 200px;
+  min-height: 200px;
+  width: 800px;
+  max-width: 800px;
+  min-width: 800px;
+}
+.list-output-border {
+  border-bottom: solid 1px black;
+}
+.out {
+  margin: 0 0 2em 0;
+  list-style-type: none;
+  padding: 0;
+  width: 15em;
+}
+.out li {
+  cursor: pointer;
+  position: relative;
+  left: 0;
+  background-color: #EEE;
+  margin: .5em;
+  padding: .3em 0;
+  height: 1.6em;
+  border-radius: 4px;
+}
+.out li:hover {
+  color: #607D8B;
+  background-color: #DDD;
+  left: .1em;
+}
+.out li.selected {
+  background-color: #CFD8DC;
+  color: white;
+}
+.out li.selected:hover {
+  background-color: #BBD8DC;
+  color: white;
+}
+.out .badge {
+  display: inline-block;
+  font-size: small;
+  color: white;
+  padding: 0.8em 0.7em 0 0.7em;
+  background-color:#405061;
+  line-height: 1em;
+  position: relative;
+  left: -1px;
+  top: -4px;
+  height: 1.8em;
+  margin-right: .8em;
+  border-radius: 4px 0 0 4px;
 }

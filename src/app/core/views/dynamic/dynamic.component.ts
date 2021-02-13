@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-dynamic',
@@ -8,11 +8,18 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class DynamicComponent implements OnInit {
   public dynamicForm: FormGroup;
+  public sampleFormGroup: FormGroup;
+  public numSamples = 0;
+  public finalOutput = [];
+  private _networkTrained = false;
+  private iterations = 0;
   private INPUT_NEURONS: number;
   private HIDDEN_NEURONS: number;
   private OUTPUT_NEURONS: number;
   private HIDDEN_LAYERS: number;
   private LEARN_RATE: number;
+  private inputSamplesForTraining = [];
+  private targetSamplesForTraining = [];
 
   /* Input to Hidden Weights (with Biases) */
   private weightsInputToHidden = [];
@@ -62,18 +69,28 @@ export class DynamicComponent implements OnInit {
   public actions = ['Attack', 'Run', 'Wander', 'Hide'];
 
   public totalErr = 100;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) {
 
   }
 
+  get networkTrained(): boolean { return this._networkTrained; }
+  set networkTrained(val) { this._networkTrained = val; }
+  get dForm(): any { return this.sampleFormGroup.controls; }
+  get iTraining(): FormArray { return this.dForm.inputTrainingArray as FormArray; }
+  get oTraining(): FormArray { return this.dForm.outputTrainingArray as FormArray; }
+
   ngOnInit(): void {
     this.dynamicForm = this.fb.group({
-      inputs: new FormControl(null, [Validators.required]),
-      outputs: new FormControl(null, [Validators.required]),
-      hiddenLayers: new FormControl(null, [Validators.required]),
-      hiddenNodes: new FormControl(null, [Validators.required]),
-      learnRate: new FormControl(null, [Validators.required]),
-      iterations: new FormControl(null, [Validators.required])
+      hiddenLayers: new FormControl(0, [Validators.required, Validators.min(1)]),
+      hiddenNodes: new FormControl(0, [Validators.required, Validators.min(1)]),
+      numInputs: new FormControl(0, [Validators.required, Validators.min(2)]),
+      numOutputs: new FormControl(0, [Validators.required, Validators.min(2)]),
+      // learnRate: new FormControl(null, [Validators.required]),
+      iterations: new FormControl(100000, [Validators.required]),
+    });
+    this.sampleFormGroup = this.fb.group({
+      inputTrainingArray: new FormArray([]),
+      outputTrainingArray: new FormArray([])
     });
     this.LEARN_RATE = .15;
     this.INPUT_NEURONS = 4;
@@ -247,23 +264,27 @@ export class DynamicComponent implements OnInit {
   }
 
   trainNetwork(): void {
+    this.INPUT_NEURONS = parseInt(this.dynamicForm.get('numInputs').value, 10);
+    this.OUTPUT_NEURONS = parseInt(this.dynamicForm.get('numOutputs').value, 10);
+    this.HIDDEN_NEURONS = parseInt(this.dynamicForm.get('hiddenNodes').value, 10);
+    this.HIDDEN_LAYERS = parseInt(this.dynamicForm.get('hiddenLayers').value, 10);
     this.assignRandomWeights();
 
     let err = 0;
-    for (let i = 0; i < 150000; i++) {
+    this.iterations = parseInt(this.dynamicForm.get('iterations').value, 10);
+
+    for (let i = 0; i < this.iterations; i++) {
       this.inputs = [];
       this.target = [];
-      const sampleNumber = Math.floor(Math.random() * 18);
+      const sampleNumber = Math.floor(Math.random() * this.inputSamplesForTraining.length);
 
-      this.inputs.push(this.samples[sampleNumber][0]['health']);
-      this.inputs.push(this.samples[sampleNumber][0]['knife']);
-      this.inputs.push(this.samples[sampleNumber][0]['gun']);
-      this.inputs.push(this.samples[sampleNumber][0]['enemy']);
+      for (let j = 0; j < this.inputSamplesForTraining[sampleNumber].length; j++) {
+        this.inputs.push(parseInt(this.inputSamplesForTraining[sampleNumber][j].value, 10));
+      }
+      for (let j = 0; j < this.targetSamplesForTraining[sampleNumber].length; j++) {
+        this.target.push(parseInt(this.targetSamplesForTraining[sampleNumber][j].value, 10));
+      }
 
-      this.target.push(this.samples[sampleNumber][1]['attack']);
-      this.target.push(this.samples[sampleNumber][1]['run']);
-      this.target.push(this.samples[sampleNumber][1]['wander']);
-      this.target.push(this.samples[sampleNumber][1]['hide']);
       this.feedForward();
 
       err = 0;
@@ -278,41 +299,243 @@ export class DynamicComponent implements OnInit {
       this.backPropagate();
     }
     this.totalErr = err;
+    this.networkTrained = true;
   }
 
   testNetwork(): void {
-    for (let i = 0; i < this.samples.length; i++) {
+    const activation = [...this.targetSamplesForTraining[0].map(m => m.name)];
+    for (let sampleNumber = 0; sampleNumber < this.numSamples; sampleNumber++) {
       this.inputs = [];
       this.target = [];
-      this.inputs.push(this.samples[i][0]['health']);
-      this.inputs.push(this.samples[i][0]['knife']);
-      this.inputs.push(this.samples[i][0]['gun']);
-      this.inputs.push(this.samples[i][0]['enemy']);
-
-      this.target.push(this.samples[i][1]['attack']);
-      this.target.push(this.samples[i][1]['run']);
-      this.target.push(this.samples[i][1]['wander']);
-      this.target.push(this.samples[i][1]['hide']);
+      for (let j = 0; j < this.inputSamplesForTraining[sampleNumber].length; j++) {
+        this.inputs.push(parseInt(this.inputSamplesForTraining[sampleNumber][j].value, 10));
+      }
+      for (let j = 0; j < this.targetSamplesForTraining[sampleNumber].length; j++) {
+        this.target.push(parseInt(this.targetSamplesForTraining[sampleNumber][j].value, 10));
+      }
 
       this.feedForward();
 
-      if (this.actions[this.target.indexOf(Math.max(...this.target))] !== this.actions[this.actual.indexOf(Math.max(...this.actual))]) {
-        console.log('Target: ' + this.actions[this.target.indexOf(Math.max(...this.target))] + ' - Actual: ' +
-          this.actions[this.actual.indexOf(Math.max(...this.actual))]);
-        console.log('i', i);
-        // console.log('Samples', this.samples[i]);
-        console.log('target', this.target);
-        console.log('actual', this.actual);
-      } else {
-        // console.log(`Sample ${i} is correct`);
+      if (activation[this.target.indexOf(Math.max(...this.target))] !== activation[this.actual.indexOf(Math.max(...this.actual))]) {
+        // console.log(`Sample ${sampleNumber} is wrong`);
+        // console.log('target', this.target);
         // console.log('actual', this.actual);
+        this.finalOutput.push({outcome: 'Wrong', message: activation[this.target.indexOf(Math.max(...this.target))] + ' - ' + activation[this.actual.indexOf(Math.max(...this.actual))]});
+      } else {
+        // console.log(`Sample ${sampleNumber} is correct: ${ activation [this.actual.indexOf(Math.max(...this.actual))]}`);
+        this.finalOutput.push({outcome: 'Correct: ', message: activation[this.actual.indexOf(Math.max(...this.actual))]});
       }
     }
+    this.dynamicForm.enable();
   }
 
   disableButton(): boolean {
-    this.dynamicForm.updateValueAndValidity();
-    return !this.dynamicForm.valid;
+    let hasError = false;
+    // tslint:disable-next-line:forin
+    for (const field in this.dynamicForm.controls) {
+      const control = this.dynamicForm.get(field);
+      if (control.errors) {
+        hasError = true;
+        break;
+      }
+    }
+    if (!hasError) {
+      for (const group of (this.sampleFormGroup.get('inputTrainingArray') as FormArray).controls)
+      {
+        // tslint:disable-next-line:forin
+        for (const field in (group as FormGroup).controls) {
+          const control = group.get(field);
+          if (control.errors) {
+            hasError = true;
+            break;
+          }
+        }
+      }
+    }
+    if (!hasError) {
+      for (const group of (this.sampleFormGroup.get('outputTrainingArray') as FormArray).controls)
+      {
+        // tslint:disable-next-line:forin
+        for (const field in (group as FormGroup).controls) {
+          const control = group.get(field);
+          if (control.errors) {
+            hasError = true;
+            break;
+          }
+        }
+      }
+    }
+    if (!hasError) {
+      hasError = !(this.inputSamplesForTraining.length > 0) || !(this.targetSamplesForTraining.length > 0);
+    }
+    return hasError;
+  }
+
+  disableSamplesButton(): boolean {
+    let hasError = false;
+
+    if (!hasError) {
+      hasError = parseInt(this.dynamicForm.get('numInputs').value, 10) === 0;
+    }
+    if (!hasError) {
+      hasError = parseInt(this.dynamicForm.get('numOutputs').value, 10) === 0;
+    }
+    if (!hasError) {
+      for (const group of (this.sampleFormGroup.get('inputTrainingArray') as FormArray).controls)
+      {
+        // tslint:disable-next-line:forin
+        for (const field in (group as FormGroup).controls) {
+          const control = group.get(field);
+          if (control.errors) {
+            hasError = true;
+            break;
+          }
+        }
+      }
+    }
+    if (!hasError) {
+      for (const group of (this.sampleFormGroup.get('outputTrainingArray') as FormArray).controls)
+      {
+        // tslint:disable-next-line:forin
+        for (const field in (group as FormGroup).controls) {
+          const control = group.get(field);
+          if (control.errors) {
+            hasError = true;
+            break;
+          }
+        }
+      }
+    }
+    if (!hasError) {
+      hasError = !((this.sampleFormGroup.get('inputTrainingArray') as FormArray).length > 0);
+      if (!hasError) {
+        hasError = parseInt(this.dynamicForm.get('numInputs').value, 10) !== (this.sampleFormGroup.get('inputTrainingArray') as FormArray).length;
+      }
+    }
+    if (!hasError) {
+      hasError = !((this.sampleFormGroup.get('outputTrainingArray') as FormArray).length > 0);
+      if (!hasError) {
+        hasError = parseInt(this.dynamicForm.get('numOutputs').value, 10) !== (this.sampleFormGroup.get('outputTrainingArray') as FormArray).length;
+      }
+    }
+
+    return hasError;
+  }
+
+  onAddTrainingInput(e): void {
+    if (this.iTraining.length < parseInt(this.dynamicForm.get('numInputs').value, 10)) {
+      this.iTraining.push(this.fb.group({
+        name: ['', Validators.required],
+        value: ['', [Validators.required, Validators.pattern('^[0-9]*$')]]
+      }));
+    }
+  }
+
+  onRemoveTrainingInput(e): void {
+    this.iTraining.removeAt(this.iTraining.length - 1);
+  }
+
+  onAddTrainingOutput(e): void {
+    if (this.oTraining.length < parseInt(this.dynamicForm.get('numOutputs').value, 10)) {
+      this.oTraining.push(this.fb.group({
+        name: ['', Validators.required],
+        value: ['', [Validators.required, Validators.pattern('^[0-9]*$')]]
+      }));
+    }
+  }
+
+  onRemoveTrainingOutput(e): void {
+    this.oTraining.removeAt(this.oTraining.length - 1);
+  }
+
+  onReset(): void {
+    this.dynamicForm.reset();
+    this.iTraining.clear();
+    this.oTraining.clear();
+    this.inputSamplesForTraining = [];
+    this.targetSamplesForTraining = [];
+    this.numSamples = 0;
+    this.totalErr = 100;
+    this.networkTrained = false;
+    this.finalOutput = [];
+  }
+
+  onClear(): void {
+    this.inputSamplesForTraining = [];
+    this.targetSamplesForTraining = [];
+    this.iTraining.clear();
+    this.oTraining.clear();
+    this.dynamicForm.enable();
+    this.numSamples = 0;
+    this.totalErr = 100;
+    this.networkTrained = false;
+    this.finalOutput = [];
+  }
+
+  addSamples(): void {
+    this.numSamples++;
+    const inputTrainingSample = [];
+    const outputTrainingSample = [];
+    for (const group of (this.sampleFormGroup.get('inputTrainingArray') as FormArray).controls)
+    {
+      inputTrainingSample.push((group as FormGroup).getRawValue());
+    }
+    this.inputSamplesForTraining.push(inputTrainingSample);
+    for (const group of (this.sampleFormGroup.get('outputTrainingArray') as FormArray).controls)
+    {
+      outputTrainingSample.push((group as FormGroup).getRawValue());
+    }
+    this.targetSamplesForTraining.push(outputTrainingSample);
+
+    this.iTraining.clear();
+    this.oTraining.clear();
+    this.dynamicForm.disable();
+  }
+
+  onFileChange(e): void {
+    const vm = this;
+    const reader = new FileReader();
+
+    const [file] = e.target.files;
+    reader.readAsText(file);
+    reader.onload = () => {
+      document.getElementById('jsonSample').innerHTML = JSON.stringify(JSON.parse(reader.result.toString()), undefined, 1);
+      const fileUpload = JSON.parse(reader.result.toString());
+      this.LEARN_RATE = fileUpload['LearnRate'];
+      vm.dynamicForm.patchValue({
+        hiddenLayers: fileUpload['HiddenLayers'],
+        hiddenNodes: fileUpload['HiddenNodes'],
+        numInputs: fileUpload['NumberInputs'],
+        numOutputs: fileUpload['NumberOutputs'],
+        iterations: fileUpload['Iterations'],
+      });
+
+      this.numSamples = fileUpload['Inputs'].length;
+      const inputTrainingSample = [];
+      const outputTrainingSample = [];
+      for (const group of fileUpload['Inputs'])
+      {
+        this.inputSamplesForTraining.push(group);
+      }
+      // this.inputSamplesForTraining.push(inputTrainingSample);
+      for (const group of fileUpload['Outputs'])
+      {
+        this.targetSamplesForTraining.push(group);
+      }
+      // this.targetSamplesForTraining.push(outputTrainingSample);
+
+      this.iTraining.clear();
+      this.oTraining.clear();
+      this.dynamicForm.disable();
+      e.target.value = '';
+      vm.cd.markForCheck();
+    };
+  }
+
+  downloadTrainedWeightsToJSON(): void {
+    // this.weightsInputToHidden
+    // this.weightsHiddenToHidden
+    // this.weightsHiddenToOutput
   }
 }
 class Player {
