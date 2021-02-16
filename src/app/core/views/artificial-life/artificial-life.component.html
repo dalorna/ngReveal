@@ -1,6 +1,6 @@
 <div>
-  <section *ngIf="!openingOff">
-    <video src="assets/video/smoke.mp4" autoplay muted></video>
+  <section class="intro" *ngIf="!openingOff">
+    <video src="assets/video/smoke.mp4" autoplay muted loop></video>
     <h1>
       <span>A</span>
       <span>R</span>
@@ -18,5 +18,34 @@
       <span>F</span>
       <span>E</span>
     </h1>
+  </section>
+  <section *ngIf="openingOff">
+    <h4>A-Life Simulator</h4>
+    <div class="container-div" [ngStyle]="{'height': gridHeight + 'px', 'width': gridWidth + 'px'}" >
+      <div class="flex-child">
+        <canvas id="aLifeCanvas" style="height: 100%; width: 100%;"></canvas>
+      </div>
+      <div class="flex-child">
+        <div style="height: 100%; overflow-y: auto;">
+          <span>{{'Herbivores: ' + Herbivores.length}}</span>
+          <ul style="list-style-type: none">
+            <li *ngFor="let h of Herbivores">
+              <span [ngStyle]="{'background-color': HerbivoreColor, 'opacity': h.health / 25}">{{h.name + ': h: ' + h.health + ', T: ' + h.turns }}</span>
+              <span [ngClass]="{'turns-herbivore' : h.turns > 40}">{{', [x,y]: [' + h.location[0] + '], [' + h.location[1] + ']'}}</span>
+            </li>
+          </ul>
+          <br />
+          <hr />
+          <br />
+          <span>{{'Carivores: ' + Carnivores.length}}</span>
+          <ul style="list-style-type: none">
+            <li *ngFor="let c of Carnivores">
+              <span [ngStyle]="{'background-color': CarnivoreColor, 'opacity': c.health / 25}">{{c.name + ': h: ' + c.health + ', T: ' + c.turns }}</span>
+              <span [ngClass]="{'turns-carnivore' : c.turns > 40}" >{{', [x,y]: [' + c.location[0] + '], [' + c.location[1] + ']'}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </section>
 </div>

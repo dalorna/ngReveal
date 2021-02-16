@@ -42,32 +42,6 @@ export class DynamicComponent implements OnInit {
   private errOutput = [];
   private errHidden = [];
 
-  /* Sample Data*/
-  /* H  K  G  E   A  R  W  H*/
-  private samples = [
-    [new Player( 2, 0, 0, 0), new Action(0, 0, 1, 0)],
-    [new Player( 2, 0, 0, 1), new Action(0, 0, 1, 0)],
-    [new Player( 2, 0, 1, 1), new Action(1, 0, 0, 0)],
-    [new Player( 2, 0, 1, 2), new Action(1, 0, 0, 0)],
-    [new Player( 2, 1, 0, 2), new Action(0, 0, 0, 1)],
-    [new Player( 2, 1, 0, 1), new Action(1, 0, 0, 0)],
-
-    [new Player( 1, 0, 0, 0), new Action(0, 0, 1, 0)],
-    [new Player( 1, 0, 0, 1), new Action(0, 0, 0, 1)],
-    [new Player( 1, 0, 1, 1), new Action(1, 0, 0, 0)],
-    [new Player( 1, 0, 1, 2), new Action(0, 0, 0, 1)],
-    [new Player( 1, 1, 0, 2), new Action(0, 0, 0, 1)],
-    [new Player( 1, 1, 0, 1), new Action(0, 0, 0, 1)],
-
-    [new Player( 0, 0, 0, 0), new Action(0, 0, 1, 0)],
-    [new Player( 0, 0, 0, 1), new Action(0, 0, 0, 1)],
-    [new Player( 0, 0, 1, 1), new Action(0, 0, 0, 1)],
-    [new Player( 0, 0, 1, 2), new Action(0, 1, 0, 0)],
-    [new Player( 0, 1, 0, 2), new Action(0, 1, 0, 0)],
-    [new Player( 0, 1, 0, 1), new Action(0, 0, 0, 1)]
-  ];
-  public actions = ['Attack', 'Run', 'Wander', 'Hide'];
-
   public totalErr = 100;
   constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) {
 
@@ -146,6 +120,7 @@ export class DynamicComponent implements OnInit {
 
   feedForward(): void {
     let sum = 0;
+    this.hidden = [];
     this.actual = [];
     this.hiddenLayersCalc = [];
     /* Calculate input to hidden layer */
@@ -276,7 +251,8 @@ export class DynamicComponent implements OnInit {
     for (let i = 0; i < this.iterations; i++) {
       this.inputs = [];
       this.target = [];
-      const sampleNumber = Math.floor(Math.random() * this.inputSamplesForTraining.length);
+      // const sampleNumber = Math.floor(Math.random() * this.inputSamplesForTraining.length);
+      const sampleNumber = i % this.inputSamplesForTraining.length;
 
       for (let j = 0; j < this.inputSamplesForTraining[sampleNumber].length; j++) {
         this.inputs.push(parseInt(this.inputSamplesForTraining[sampleNumber][j].value, 10));
@@ -458,6 +434,7 @@ export class DynamicComponent implements OnInit {
     this.totalErr = 100;
     this.networkTrained = false;
     this.finalOutput = [];
+    document.getElementById('jsonSample').innerHTML = '';
   }
 
   onClear(): void {
@@ -537,29 +514,5 @@ export class DynamicComponent implements OnInit {
     // this.weightsHiddenToHidden
     // this.weightsHiddenToOutput
   }
-}
-class Player {
-  constructor(h, k, g, e) {
-    this.health = h;
-    this.knife = k;
-    this.gun = g;
-    this.enemy = e;
-  }
-  health: number;
-  knife: number;
-  gun: number;
-  enemy: number;
-}
-class Action {
-  constructor(a, r, w, h) {
-    this.attack = a;
-    this.run = r;
-    this.wander = w;
-    this.hide = h;
-  }
-  attack: number;
-  run: number;
-  wander: number;
-  hide: number;
 }
 

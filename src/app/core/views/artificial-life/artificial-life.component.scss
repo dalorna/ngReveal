@@ -1,13 +1,13 @@
-section {
+section.intro {
   height: 95vh;
   background: #000;
 }
-section:before {
+section.intro:before {
   content: '';
   position: absolute;
   top: 1%;
-  left: 7%;
-  width: 93%;
+  left: 8%;
+  width: 90%;
   height: 95vh;
   pointer-events: none;
   background: linear-gradient(to right, #f00, #f00, #0f0,#0ff,#ff0,#0ff);
@@ -15,6 +15,7 @@ section:before {
 }
 video {
   object-fit: cover;
+  margin-left: 100px;
 }
 h1 {
   margin-left: -70px;
@@ -89,4 +90,36 @@ h1 span:nth-child(14) {
 }
 h1 span:nth-child(15) {
   animation-delay: 4.5s;
+}
+
+.container-div {
+  position: relative;
+  border: solid 1px black;
+  box-shadow: 0 0 3px black;
+  display: flex;
+}
+.flex-child {
+  flex: 1;
+}
+
+.flex-child:first-child {
+  margin-right: 20px;
+}
+.flex-child:nth-child(2) {
+  border: solid 1px black;
+  box-shadow: 0 0 3px gray;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+ul {
+  width: 400px;
+}
+.turns-carnivore {
+  background-color: #0310EA;
+  color: yellow;
+}
+.turns-herbivore {
+  background-color: #0310EA;
+  color: yellow;
 }
