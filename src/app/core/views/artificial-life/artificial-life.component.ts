@@ -7,9 +7,9 @@ import {fabric} from 'fabric';
   styleUrls: ['./artificial-life.component.scss']
 })
 export class ArtificialLifeComponent implements OnInit {
-  private NumberOfCarnivores = 3;
-  private NumberOfHerbivores = 5;
-  private NumberOfPlants = 15;
+  private NumberOfCarnivores = 5;
+  private NumberOfHerbivores = 8;
+  private NumberOfPlants = 18;
   private lineHeight = 25;
   private lineWidth = 25;
   public gridHeight = 400;
@@ -31,8 +31,8 @@ export class ArtificialLifeComponent implements OnInit {
     setTimeout(() => {
       this.setUpGrid();
       this.setUpAgents();
-      setInterval(() => {
-        this.createTurn();
+      setInterval(async () => {
+        await this.createTurn();
       }, 1000);
     }, 5500);
   }
@@ -55,7 +55,7 @@ export class ArtificialLifeComponent implements OnInit {
     const maxX = (this.gridWidth / this.lineWidth) - 1;
     const maxY = (this.gridHeight / this.lineHeight) - 1;
     for (let i = 0; i < this.NumberOfPlants; i++) {
-      this.Plants.push(new Plant(this.PlantColor, Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY), Math.floor(Math.random() * 31)));
+      this.Plants.push(new Plant(this.PlantColor, Math.floor(Math.random() * 25), Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY)));
     }
     for (let i = 0; i < this.NumberOfHerbivores; i++) {
       this.Herbivores.push(new Herbivore(this.HerbivoreColor, Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY), 'H_' + Math.floor(Math.random() * 1000), this.gridHeight, this.gridWidth, this.lineHeight, this.lineHeight));
@@ -98,7 +98,7 @@ export class ArtificialLifeComponent implements OnInit {
       const maxX = (this.gridWidth / this.lineWidth) - 1;
       const maxY = (this.gridHeight / this.lineHeight) - 1;
       for (let i = 0; i < (this.NumberOfPlants - this.Plants.length); i++) {
-        this.Plants.push(new Plant(this.PlantColor, Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY), Math.floor(Math.random() * 31)));
+        this.Plants.push(new Plant(this.PlantColor, Math.floor(Math.random() * 25), Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY)));
       }
     }
 
@@ -328,7 +328,7 @@ class Herbivore implements Agent {
     const plants = [inputs[1], inputs[2], inputs[6], inputs[7], inputs[8]];
     const index = plants.findIndex(f => !!f);
     const myInputs = [...inputs];
-    const healthInput = this.health / 20 < 1 ? 4 : 1;
+    const healthInput = this.health / 40 < 1 ? 4 : 1;
     myInputs.push(healthInput);
     const canEat = index > 0;
 
@@ -481,7 +481,7 @@ class Carnivore implements Agent {
     const herbs = [inputs[16], inputs[17], inputs[21], inputs[22], inputs[23]];
     const index = herbs.findIndex(f => !!f);
     const myInputs = [...inputs];
-    const healthInput = this.health / 20 < 1 ? 4 : 1;
+    const healthInput = this.health / 49 < 1 ? 4 : 1;
     myInputs.push(healthInput);
     const canEat = index > 0;
     const feedForwardCalc = [];
